@@ -1,0 +1,41 @@
+name: Sync to Hugging Face Spaces
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # 1. NUCLEAR CLEAN: Remove documentation and all binary files
+          rm -rf docs
+          find . -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.mp4" -o -name "*.pdf" -o -name "*.ttf" -o -name "*.woff" -o -name "*.woff2" -o -name "*.ico" \) -delete
+          
+          # 2. ADD HUGGING FACE METADATA
+          # This ensures Hugging Face knows it's a Docker app on port 7860
+          sed -i '1s/^/---\ntitle: Prometheus\nsdk: docker\napp_port: 7860\n---\n\n/' README.md
+          
+          # 3. Wipe history
+          rm -rf .git
+          
+          # 4. Fresh start for the push
+          git init
+          git checkout -b main
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Deploying Prometheus to Hugging Face"
+          
+          # 5. Push to Hugging Face
+          git push --force https://jessecodesometimes:$HF_TOKEN@huggingface.co/spaces/jessecodesometimes/Prometheus main
