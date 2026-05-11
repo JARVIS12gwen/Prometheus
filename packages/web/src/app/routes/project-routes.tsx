@@ -38,6 +38,7 @@ const AppConnectionsPage = React.lazy(() =>
 const ApTableEditorPage = React.lazy(() =>
   import('./tables/id').then((m) => ({ default: m.ApTableEditorPage })),
 );
+const PricingPage = React.lazy(() => import('./pricing'));
 
 const SettingsRerouter = () => {
   const { hash } = useLocation();
@@ -221,6 +222,18 @@ export const projectRoutes = [
         <PageTitle title="Leaderboard">
           <SuspenseWrapper>
             <LeaderboardPage />
+          </SuspenseWrapper>
+        </PageTitle>
+      </ProjectDashboardLayout>
+    ),
+  },
+  {
+    path: '/pricing',
+    element: (
+      <ProjectDashboardLayout>
+        <PageTitle title="Pricing">
+          <SuspenseWrapper>
+            <PricingPage />
           </SuspenseWrapper>
         </PageTitle>
       </ProjectDashboardLayout>
