@@ -8,7 +8,7 @@ import {
   TemplateTelemetryEventType,
 } from '@activepieces/shared';
 import { t } from 'i18next';
-import { Search, CreditCard } from 'lucide-react';
+import { Search, CreditCard, Scale, Info, Mail } from 'lucide-react';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
@@ -231,7 +231,46 @@ export function ProjectDashboardSidebar({
     isSubItem: false,
   };
 
-  const items = [chatLink, exploreLink, impactLink, leaderboardLink, pricingLink]
+  const legalLink: SidebarItemType = {
+    type: 'link',
+    to: '/legal',
+    label: t('Legal'),
+    icon: Scale,
+    show: true,
+    hasPermission: true,
+    isSubItem: false,
+  };
+
+  const aboutLink: SidebarItemType = {
+    type: 'link',
+    to: '/about',
+    label: t('About us'),
+    icon: Info,
+    show: true,
+    hasPermission: true,
+    isSubItem: false,
+  };
+
+  const contactLink: SidebarItemType = {
+    type: 'link',
+    to: '/contact',
+    label: t('Contact us'),
+    icon: Mail,
+    show: true,
+    hasPermission: true,
+    isSubItem: false,
+  };
+
+  const items = [
+    chatLink,
+    exploreLink,
+    impactLink,
+    leaderboardLink,
+    pricingLink,
+    legalLink,
+    aboutLink,
+    contactLink,
+  ]
     .filter((item) => item.show !== false)
     .filter(permissionFilter);
 
