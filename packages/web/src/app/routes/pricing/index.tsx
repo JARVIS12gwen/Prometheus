@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion';
 import { Check, ArrowRight, Star } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 
+// Failsafe Pricing Page - No external dependencies that can break the build
 export const PricingPage = () => {
-  const { t } = useTranslation();
   const plans = [
     {
       name: 'Launch',
@@ -144,5 +143,3 @@ export const PricingPage = () => {
     </div>
   );
 };
-
-export default PricingPage;
