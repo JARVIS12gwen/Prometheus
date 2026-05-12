@@ -35,8 +35,9 @@ const FlowRunPage = React.lazy(() =>
 const AppConnectionsPage = React.lazy(() =>
   import('./connections').then((m) => ({ default: m.AppConnectionsPage })),
 );
-const ApTableEditorPage = React.lazy(() =>
-  import('./tables/id').then((m) => ({ default: m.ApTableEditorPage })),
+const PricingPage = React.lazy(() => import('./pricing'));
+const LegalPage = React.lazy(() =>
+  import('./legal').then((m) => ({ default: m.LegalPage })),
 );
 
 const SettingsRerouter = () => {
@@ -224,6 +225,26 @@ export const projectRoutes = [
           </SuspenseWrapper>
         </PageTitle>
       </ProjectDashboardLayout>
+    ),
+  },
+  {
+    path: '/pricing',
+    element: (
+      <ProjectDashboardLayout>
+        <PageTitle title="Pricing">
+          <SuspenseWrapper>
+            <PricingPage />
+          </SuspenseWrapper>
+        </PageTitle>
+      </ProjectDashboardLayout>
+    ),
+  },
+  {
+    path: '/legal',
+    element: (
+      <SuspenseWrapper>
+        <LegalPage />
+      </SuspenseWrapper>
     ),
   },
 ];

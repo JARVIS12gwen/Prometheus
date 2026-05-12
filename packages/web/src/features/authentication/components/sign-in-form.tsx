@@ -18,7 +18,8 @@ import { z } from 'zod';
 
 import { authenticationApi } from '@/api/authentication-api';
 import { Button } from '@/components/ui/button';
-import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { flagsHooks } from '@/hooks/flags-hooks';
@@ -34,7 +35,9 @@ const SignInSchema = z.object({
   password: z.string().min(1, t('Password is required')),
 });
 
-type SignInSchema = z.infer<typeof SignInSchema>;
+type SignInSchema = z.infer<typeof SignInSchema> & {
+  agreedToTerms: boolean;
+};
 
 const SignInForm: React.FC = () => {
   const [showCheckYourEmailNote, setShowCheckYourEmailNote] = useState(false);
@@ -44,6 +47,7 @@ const SignInForm: React.FC = () => {
     defaultValues: {
       email: '',
       password: '',
+      agreedToTerms: false,
     },
     mode: 'onChange',
   });
@@ -204,6 +208,34 @@ const SignInForm: React.FC = () => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="agreedToTerms"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-2">
+                <FormControl>
+                  <Checkbox
+                    id="agreedToTermsSignIn"
+                    className="m-0!"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  ></Checkbox>
+                </FormControl>
+                <Label htmlFor="agreedToTermsSignIn" className="text-xs">
+                  {t('By ticking this box, you agree to our ')}
+                  <Link
+                    to="/legal"
+                    className="text-primary hover:underline"
+                    target="_blank"
+                  >
+                    {t('terms and conditions and privacy policy')}
+                  </Link>
+                </Label>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {form?.formState?.errors?.root?.serverError && (
             <FormMessage>
               {form.formState.errors.root.serverError.message}
@@ -211,6 +243,7 @@ const SignInForm: React.FC = () => {
           )}
           <Button
             loading={isPending}
+            disabled={!form.watch('agreedToTerms')}
             onClick={(e) => form.handleSubmit(onSubmit)(e)}
             tabIndex={3}
             data-testid="sign-in-button"

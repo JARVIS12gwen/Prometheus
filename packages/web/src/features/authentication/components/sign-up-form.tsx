@@ -9,7 +9,7 @@ import { t } from 'i18next';
 import { Eye, EyeOff } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -59,6 +59,7 @@ const SignUpForm = ({
       newsLetter: false,
       password: '',
       email: searchParams.get('email') || '',
+      agreedToTerms: false,
     },
   });
   const websiteName = flagsHooks.useWebsiteBranding()?.websiteName;
@@ -339,6 +340,37 @@ const SignUpForm = ({
             />
           )}
 
+          <FormField
+            control={form.control}
+            name="agreedToTerms"
+            rules={{
+              required: true,
+            }}
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-2">
+                <FormControl>
+                  <Checkbox
+                    id="agreedToTerms"
+                    className="m-0!"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  ></Checkbox>
+                </FormControl>
+                <Label htmlFor="agreedToTerms" className="text-xs">
+                  {t('By ticking this box, you agree to our ')}
+                  <Link
+                    to="/legal"
+                    className="text-primary hover:underline"
+                    target="_blank"
+                  >
+                    {t('terms and conditions and privacy policy')}
+                  </Link>
+                </Label>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {form?.formState?.errors?.root?.serverError && (
             <FormMessage>
               {form.formState.errors.root.serverError.message}
@@ -346,6 +378,7 @@ const SignUpForm = ({
           )}
           <Button
             loading={isPending}
+            disabled={!form.watch('agreedToTerms')}
             onClick={(e) => form.handleSubmit(onSubmit)(e)}
             data-testid="sign-up-button"
           >
@@ -367,4 +400,5 @@ type SignUpSchema = {
   lastName: string;
   password: string;
   newsLetter: boolean;
+  agreedToTerms: boolean;
 };
