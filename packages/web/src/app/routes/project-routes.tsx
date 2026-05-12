@@ -45,6 +45,9 @@ const PricingPage = React.lazy(() => import('./pricing'));
 const LegalPage = React.lazy(() =>
   import('./legal').then((m) => ({ default: m.LegalPage })),
 );
+const AboutPage = React.lazy(() =>
+  import('./about/index').then((m) => ({ default: m.AboutPage })),
+);
 
 const SettingsRerouter = () => {
   const { hash } = useLocation();
@@ -250,6 +253,14 @@ export const projectRoutes = [
     element: (
       <SuspenseWrapper>
         <LegalPage />
+      </SuspenseWrapper>
+    ),
+  },
+  {
+    path: '/about',
+    element: (
+      <SuspenseWrapper>
+        <AboutPage />
       </SuspenseWrapper>
     ),
   },
