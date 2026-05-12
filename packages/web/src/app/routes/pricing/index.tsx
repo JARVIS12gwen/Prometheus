@@ -120,12 +120,15 @@ export const PricingPage = () => {
               </div>
 
               <Button
-                  transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]
-                `}
+                className={`w-full py-7 rounded-2xl flex items-center justify-center gap-2 text-lg font-bold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group/btn ${
+                  plan.popular 
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-[0_0_30px_rgba(124,58,237,0.5)]' 
+                  : 'bg-white/5 hover:bg-white/10 border border-white/10'
+                }`}
               >
                 {/* Shine Animation */}
                 <div className="absolute inset-0 w-1/2 h-full bg-white/20 -skew-x-[30deg] -translate-x-[200%] group-hover/btn:animate-[shine_1s_ease-in-out_infinite] pointer-events-none" />
-                Get Started
+                Upgrade Now <ArrowRight className="w-5 h-5" />
               </Button>
             </div>
           </motion.div>
