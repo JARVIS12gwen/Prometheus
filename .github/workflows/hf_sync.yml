@@ -18,9 +18,15 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # 1. NUCLEAR CLEAN: Remove documentation and all binary files
-          rm -rf docs
-          find . -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.mp4" -o -name "*.pdf" -o -name "*.ttf" -o -name "*.woff" -o -name "*.woff2" -o -name "*.ico" \) -delete
+          # Clean up unnecessary files to stay under HF size limits
+          # Keep fonts and small assets needed for build
+          find . -type f \( -name "*.mp4" -o -name "*.pdf" -o -name "*.zip" -o -name "*.tar.gz" \) -delete
+          find packages/pieces/community -mindepth 1 -maxdepth 1 -type d \
+            ! -name slack \
+            ! -name square \
+            ! -name facebook-leads \
+            ! -name intercom \
+            -exec rm -rf {} +
           
           # 2. ADD HUGGING FACE METADATA
           # This ensures Hugging Face knows it's a Docker app on port 7860
