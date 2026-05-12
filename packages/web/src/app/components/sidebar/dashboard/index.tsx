@@ -8,9 +8,10 @@ import {
   TemplateTelemetryEventType,
 } from '@activepieces/shared';
 import { t } from 'i18next';
-import { Search, CreditCard, Scale } from 'lucide-react';
+import { Search, CreditCard, Scale, Info, Moon, Sun } from 'lucide-react';
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useTheme } from '@/components/providers/theme-provider';
 import { useDebounce } from 'use-debounce';
 
 import { SearchInput } from '@/components/custom/search-input';
@@ -374,6 +375,7 @@ export function ProjectDashboardSidebar({
         </SidebarContent>
         <SidebarFooter>
           {state === 'expanded' && <DelayedSidebarUsageLimits />}
+          <SidebarPremiumLinks />
           <SidebarPlatformAdminLink />
           <SidebarUser />
         </SidebarFooter>
@@ -429,6 +431,44 @@ function SidebarPlatformAdminLink() {
             });
         }}
       />
+    </SidebarMenu>
+  );
+}
+
+function SidebarPremiumLinks() {
+  const { theme, setTheme } = useTheme();
+  const { state } = useSidebar();
+  
+  return (
+    <SidebarMenu className="px-2 pb-2 space-y-1">
+      <ApSidebarItem
+        type="link"
+        to="/legal"
+        label={t('About Us')}
+        icon={Info}
+        isSubItem={false}
+        show={true}
+        hasPermission={true}
+      />
+      <SidebarMenuItem>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start gap-3 px-2 h-9 text-muted-foreground hover:text-foreground transition-all duration-300"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-4 h-4 text-amber-400" />
+          ) : (
+            <Moon className="w-4 h-4 text-blue-500" />
+          )}
+          {state === 'expanded' && (
+            <span className="text-sm font-medium">
+              {theme === 'dark' ? t('Light Mode') : t('Dark Mode')}
+            </span>
+          )}
+        </Button>
+      </SidebarMenuItem>
     </SidebarMenu>
   );
 }

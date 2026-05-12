@@ -1,129 +1,124 @@
 import { motion } from 'framer-motion';
-import { Check, Zap, Crown, Building2 } from 'lucide-react';
+import { Check, ArrowRight, Star } from 'lucide-react';
 import { t } from 'i18next';
 import { Button } from '@/components/ui/button';
 
 export const PricingPage = () => {
   const plans = [
     {
-      name: 'Free',
-      price: '$0',
-      description: 'Perfect for getting started with automation.',
-      features: ['1,000 Tasks/mo', 'Unlimited Flows', 'Community Support', 'Basic Pieces'],
-      icon: <Zap className="w-6 h-6 text-blue-400" />,
-      color: 'from-blue-500/20 to-cyan-500/20',
+      name: 'Launch',
+      price: '8.99',
+      description: 'Get started with the essentials and watch your ideas take flight.',
+      features: ['+ 100 Users', 'Basic Automation', 'Community Support'],
+      save: '10%',
       delay: 0.1,
     },
     {
-      name: 'Pro',
-      price: '$29',
-      description: 'Power your business with advanced features.',
-      features: ['10,000 Tasks/mo', 'Premium Pieces', 'Email Support', 'Shared Connections'],
-      icon: <Check className="w-6 h-6 text-purple-400" />,
-      color: 'from-purple-500/20 to-pink-500/20',
+      name: 'Advance',
+      price: '12.99',
+      description: 'Step up your game with smarter tools and greater power.',
+      features: ['+ 100 Users', '+ 3 Extra months', 'Advanced Tools'],
+      save: '10%',
       delay: 0.2,
       popular: true,
+      tag: 'Best Deal',
     },
     {
-      name: 'Legend',
-      price: '$99',
-      description: 'The ultimate power for automation experts.',
-      features: ['50,000 Tasks/mo', 'Priority Support', 'Custom Scripts', 'Advanced Analytics'],
-      icon: <Crown className="w-6 h-6 text-amber-400" />,
-      color: 'from-amber-500/20 to-orange-500/20',
+      name: 'Infinity',
+      price: '17.99',
+      description: 'Unlock limitless potential — the future is yours to create.',
+      features: ['+ 100 Users', 'Unlimited Flows', 'Priority Support'],
+      save: '10%',
       delay: 0.3,
     },
     {
-      name: 'Enterprise',
-      price: 'Custom',
-      description: 'Security and scale for large organizations.',
-      features: ['Unlimited Tasks', 'Dedicated Account Manager', 'SSO & Audit Logs', 'SLA Guarantee'],
-      icon: <Building2 className="w-6 h-6 text-emerald-400" />,
-      color: 'from-emerald-500/20 to-teal-500/20',
+      name: 'Elite',
+      price: '49.99',
+      description: 'The absolute pinnacle of automation for masters.',
+      features: ['Unlimited Users', 'Dedicated Support', 'Custom Architecture'],
+      save: '20%',
       delay: 0.4,
     },
   ];
 
   return (
-    <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8 bg-background overflow-hidden relative">
-      {/* Background Orbs for extra premium feel */}
-      <div className="absolute top-0 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 -right-20 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto text-center relative z-10">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
+    <div className="min-h-full py-20 px-4 bg-[#0a0a0c] text-white overflow-hidden relative font-sans">
+      {/* Dynamic Background */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 rounded-full blur-[120px] animate-pulse" />
+      
+      <div className="max-w-7xl mx-auto text-center relative z-10 mb-20">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-base font-semibold text-primary tracking-wide uppercase"
+          className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500"
         >
-          {t('Pricing')}
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-2 text-4xl font-extrabold text-foreground sm:text-5xl lg:text-6xl"
-        >
-          Choose your power level
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-4 max-w-2xl text-xl text-muted-foreground mx-auto"
-        >
-          Scale your automation with Prometheus. Simple, transparent pricing for everyone.
-        </motion.p>
+          All-In-One Price, Zero Hassle.<br />Cancel Anytime. Let’s Get Started!
+        </motion.h1>
+        <p className="text-gray-400 text-xl max-w-2xl mx-auto font-medium">
+          Clear Pricing, No Strings Attached. Remember When SaaS Was This Simple? It’s Time To Make It That Easy Again.
+        </p>
+        
+        <div className="flex justify-center gap-4 mt-10">
+          {['+10 Users', '+100 Users', '+500 Users', '+1000 Users'].map((u, i) => (
+            <button key={u} className={`px-4 py-2 rounded-full text-sm border transition-all ${i === 1 ? 'bg-white text-black border-white' : 'border-white/20 text-gray-400'}`}>
+              {u} {i === 3 && <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full ml-1 text-white uppercase font-bold">Save 24%</span>}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="mt-16 max-w-7xl mx-auto grid grid-cols-1 gap-8 lg:grid-cols-4 sm:grid-cols-2 relative z-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
         {plans.map((plan) => (
           <motion.div
             key={plan.name}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: plan.delay }}
-            whileHover={{ y: -10, scale: 1.02 }}
-            className={`flex flex-col rounded-3xl overflow-hidden p-8 transition-all duration-300 relative group
-              bg-white/5 dark:bg-black/20 backdrop-blur-xl border border-white/10 dark:border-white/5
-              hover:border-primary/50 hover:shadow-[0_0_40px_-15px_rgba(var(--primary),0.3)]
-            `}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: plan.delay }}
+            className={`relative group rounded-[32px] p-[1px] ${plan.popular ? 'bg-gradient-to-b from-blue-500 to-purple-600 scale-105 z-20 shadow-2xl shadow-purple-500/20' : 'bg-white/10'}`}
           >
-            {/* Radial Gradient Background */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${plan.color} opacity-30 group-hover:opacity-50 transition-opacity pointer-events-none`} />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_50%)] pointer-events-none" />
+            <div className="bg-[#111114] rounded-[31px] p-8 h-full flex flex-col glass">
+              {plan.tag && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2 rounded-full flex items-center gap-2 shadow-xl border border-white/20">
+                  <Star className="w-4 h-4 fill-white" />
+                  <span className="text-sm font-bold uppercase tracking-wider">{plan.tag}</span>
+                </div>
+              )}
 
-            {plan.popular && (
-              <div className="absolute top-0 right-0 mt-4 mr-4">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary text-primary-foreground shadow-lg">
-                  Most Popular
-                </span>
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="text-2xl font-bold">{plan.name}</h3>
+                {plan.save && (
+                  <span className="text-[10px] bg-white/10 text-white border border-white/20 px-2 py-1 rounded-full uppercase font-bold">
+                    Save {plan.save}
+                  </span>
+                )}
               </div>
-            )}
 
-            <div className="relative z-10">
-              <div className="flex items-center justify-between">
-                {plan.icon}
-                <span className="text-3xl font-bold text-foreground">{plan.price}</span>
+              <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                {plan.description}
+              </p>
+
+              <div className="mb-8">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-bold">${plan.price}</span>
+                  <span className="text-gray-500">/ user</span>
+                </div>
               </div>
-              <h3 className="mt-4 text-2xl font-bold text-foreground tracking-tight">{plan.name}</h3>
-              <p className="mt-2 text-muted-foreground text-sm">{plan.description}</p>
 
-              <ul className="mt-8 space-y-4">
+              <div className="space-y-4 mb-10 flex-grow text-left">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start text-sm text-foreground/80">
-                    <Check className="h-5 w-5 text-primary shrink-0 mr-3" />
-                    <span>{feature}</span>
-                  </li>
+                  <div key={feature} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
+                    <span className={`text-sm ${feature.includes('+') ? 'text-blue-400 font-bold' : 'text-gray-300'}`}>
+                      {feature}
+                    </span>
+                  </div>
                 ))}
-              </ul>
-            </div>
+              </div>
 
-            <div className="mt-auto pt-8 relative z-10">
               <Button
-                className={`w-full h-12 rounded-xl text-lg font-bold relative overflow-hidden group/btn 
-                  ${plan.popular ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}
                   transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]
                 `}
               >

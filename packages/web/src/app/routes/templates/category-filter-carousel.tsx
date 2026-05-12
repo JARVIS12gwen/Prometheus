@@ -1,4 +1,15 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Cpu, 
+  Scale, 
+  Zap, 
+  Users, 
+  Heart, 
+  TrendingUp, 
+  Globe, 
+  Briefcase 
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -37,17 +48,30 @@ const CarouselContentWithButtons = ({
       <CarouselContent className={cn('-ml-2 gap-1', className)}>
         {categories.map((category) => {
           const isSelected = selectedCategory === category;
+          const getCategoryIcon = (cat: string) => {
+            const lower = cat.toLowerCase();
+            if (lower.includes('it')) return <Cpu className="w-4 h-4 mr-2" />;
+            if (lower.includes('legal')) return <Scale className="w-4 h-4 mr-2" />;
+            if (lower.includes('customer')) return <Heart className="w-4 h-4 mr-2" />;
+            if (lower.includes('sales')) return <TrendingUp className="w-4 h-4 mr-2" />;
+            if (lower.includes('featured')) return <Zap className="w-4 h-4 mr-2" />;
+            if (lower.includes('everyday')) return <Globe className="w-4 h-4 mr-2" />;
+            if (lower.includes('marketing')) return <Users className="w-4 h-4 mr-2" />;
+            return <Briefcase className="w-4 h-4 mr-2" />;
+          };
+
           return (
             <CarouselItem key={category} className="basis-auto pl-2">
               <Button
                 variant="outline"
                 onClick={() => onCategorySelect(category)}
-                className={`px-4 py-1.5 h-auto whitespace-nowrap transition-colors ${
+                className={`px-4 py-1.5 h-auto whitespace-nowrap transition-all duration-300 flex items-center ${
                   isSelected
-                    ? 'bg-black text-white border-black hover:!bg-black hover:!text-white'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white border-none hover:shadow-[0_0_15px_rgba(37,99,235,0.4)]'
                     : 'bg-transparent hover:!bg-sidebar-accent hover:!text-sidebar-accent-foreground border-none'
                 }`}
               >
+                {getCategoryIcon(category)}
                 {category}
               </Button>
             </CarouselItem>

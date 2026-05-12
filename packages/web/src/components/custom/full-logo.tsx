@@ -1,17 +1,11 @@
 import { t } from 'i18next';
 
-import { flagsHooks } from '@/hooks/flags-hooks';
-
 const FullLogo = () => {
-  const branding = flagsHooks.useWebsiteBranding();
-
   return (
-    <div className="h-[60px]">
-      <img
-        className="h-full"
-        src={branding.logos.fullLogoUrl}
-        alt={t('logo')}
-      />
+    <div className="flex items-center justify-center py-4">
+      <span className="text-4xl font-extrabold tracking-tighter text-gradient select-none">
+        {t('Prometheus')}
+      </span>
     </div>
   );
 };

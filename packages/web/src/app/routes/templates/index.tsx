@@ -113,7 +113,7 @@ const TemplatesPage = () => {
                   <div className="flex flex-row justify-end w-[50%]">
                     <Button
                       variant="outline"
-                      className="gap-2 h-full"
+                      className="gap-2 h-full btn-fluid text-white border-none shadow-lg"
                       onClick={() => createFlow()}
                       disabled={isCreateFlowPending}
                     >
