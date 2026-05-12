@@ -24,10 +24,12 @@ export const authenticationService = (log: FastifyBaseLogger) => ({
                 email: params.email,
                 platformId,
             })
+            /*
             await authenticationUtils(log).assertUserIsInvitedToPlatformOrProject({
                 email: params.email,
                 platformId,
             })
+            */
             const userIdentity = await userIdentityService(log).create({
                 ...params,
                 verified: true,
@@ -142,10 +144,12 @@ export const authenticationService = (log: FastifyBaseLogger) => ({
             platformId,
         })
         if (isNil(existingUser)) {
+            /*
             await authenticationUtils(log).assertUserIsInvitedToPlatformOrProject({
                 email: params.email,
                 platformId,
             })
+            */
         }
         const user = await userService(log).getOrCreateWithProject({
             identity: userIdentity,
