@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
 import { Check, ArrowRight, Star } from 'lucide-react';
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 
 export const PricingPage = () => {
+  const { t } = useTranslation();
   const plans = [
     {
       name: 'Launch',
