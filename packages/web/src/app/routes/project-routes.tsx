@@ -32,7 +32,7 @@ const RunsPage = React.lazy(() =>
 const FlowRunPage = React.lazy(() =>
   import('./runs/id').then((m) => ({ default: m.FlowRunPage })),
 );
-const ApPricingPage = lazy(() =>
+const ApPricingPage = React.lazy(() =>
   import('./pricing/index').then((m) => ({ default: m.PricingPage })),
 );
 const AppConnectionsPage = React.lazy(() =>
