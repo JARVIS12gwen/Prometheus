@@ -38,7 +38,9 @@ const AppConnectionsPage = React.lazy(() =>
 const ApTableEditorPage = React.lazy(() =>
   import('./tables/id').then((m) => ({ default: m.ApTableEditorPage })),
 );
-const PricingPage = React.lazy(() => import('./pricing'));
+const PricingPage = React.lazy(() =>
+  import('./pricing').then((m) => ({ default: m.PricingPage })),
+);
 const LegalPage = React.lazy(() =>
   import('./legal').then((m) => ({ default: m.LegalPage })),
 );
