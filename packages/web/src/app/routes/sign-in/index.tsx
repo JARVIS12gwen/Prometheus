@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { AuthFormTemplate } from '@/features/authentication';
 
 const SignInPage: React.FC = () => {
