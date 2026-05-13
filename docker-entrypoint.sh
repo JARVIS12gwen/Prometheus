@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Start internal Redis server in the background
+redis-server --daemonize yes
+
 export AP_CONTAINER_TYPE="${AP_CONTAINER_TYPE:-WORKER_AND_APP}"
 export AP_PORT="${AP_PORT:-80}"
 export AP_PM2_INSTANCES="${AP_PM2_INSTANCES:-1}"
