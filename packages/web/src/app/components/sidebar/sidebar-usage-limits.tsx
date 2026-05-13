@@ -1,6 +1,6 @@
 import { ApEdition, ApFlagId, isNil, PlatformRole } from '@activepieces/shared';
 import { t } from 'i18next';
-import { ChevronRight, Info } from 'lucide-react';
+import { ArrowRight, ChevronRight, Info } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -23,55 +23,66 @@ const SidebarUsageLimits = React.memo(() => {
   const isPlatformAdmin = currentUser.data?.platformRole === PlatformRole.ADMIN;
   const { data: edition } = flagsHooks.useFlag<ApEdition>(ApFlagId.EDITION);
 
-  if (edition !== ApEdition.CLOUD) {
+  // Determine if user is on a free plan (adjust logic if plan names vary)
+  const isFreePlan = platform.plan.name?.toLowerCase().includes('free') || !platform.plan.name;
+
+  if (edition !== ApEdition.CLOUD || !isFreePlan) {
     return null;
   }
 
   if (isNil(project)) {
     return (
-      <div className="flex flex-col w-full p-2.5 bg-background rounded-md border">
-        <div className="flex flex-col gap-2">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Skeleton className="size-4" />
-                <Skeleton className="w-20 h-4" />
-              </div>
-              <Skeleton className="w-16 h-4" />
-            </div>
-          ))}
-        </div>
+      <div className="flex flex-col w-full p-3 gap-2 bg-background rounded-xl border animate-pulse">
+        <Skeleton className="w-24 h-4" />
+        <Skeleton className="w-full h-2" />
+        <Skeleton className="w-16 h-3" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col w-full p-2.5 bg-background rounded-md border">
-      <div className="flex flex-col gap-1.5">
-        <UsageRow name={t('Runs')} isUnlimited={true} />
-        <UsageRow
-          name={t('AI Credits')}
-          value={Math.round(platform.usage?.aiCreditsRemaining ?? 0)}
-          suffix={t('remaining')}
-          tooltip={t(
-            'Used when running AI pieces with Activepieces as the provider instead of your own API keys.',
-          )}
-        />
-        <UsageRow
-          name={t('Active Flows')}
-          value={platform.usage?.activeFlows ?? 0}
-          max={platform?.plan.activeFlowsLimit}
-        />
-        {isPlatformAdmin && (
-          <Link
-            to="/platform/setup/billing"
-            className="flex items-center gap-1 text-xs text-foreground/80 hover:text-foreground mt-3 w-fit"
-          >
-            <span>{t('Manage Plan')}</span>
-            <ChevronRight className="size-4" />
-          </Link>
-        )}
+    <div className={cn(
+      "flex flex-col w-full p-4 gap-4 rounded-2xl transition-all duration-500",
+      "bg-background border",
+      "dark:bg-gradient-to-br dark:from-[#111114] dark:to-[#0a0a0c] dark:border-white/5 dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+    )}>
+      <div className="flex flex-col gap-1">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground dark:text-blue-500/80">
+          {t('Current Plan')}
+        </span>
+        <span className="text-sm font-bold dark:text-white">
+          {platform.plan.name || t('Free Plan')}
+        </span>
       </div>
+
+      <div className="space-y-3">
+        <UsageRow 
+          name={t('Runs')} 
+          value={platform.usage?.tasks ?? 0}
+          max={platform.plan.tasksLimit}
+          progressBar
+        />
+        <UsageRow 
+          name={t('Active Flows')} 
+          value={platform.usage?.activeFlows ?? 0}
+          max={platform.plan.activeFlowsLimit}
+          progressBar
+        />
+      </div>
+
+      {isPlatformAdmin && (
+        <Link
+          to="/pricing"
+          className={cn(
+            "flex items-center justify-center gap-2 py-2 px-4 rounded-xl text-xs font-bold transition-all duration-300",
+            "bg-primary text-primary-foreground hover:opacity-90",
+            "dark:bg-blue-600 dark:hover:bg-blue-500 dark:shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+          )}
+        >
+          <span>{t('Power Up')}</span>
+          <ArrowRight className="size-3.5" />
+        </Link>
+      )}
     </div>
   );
 });
@@ -92,39 +103,50 @@ const UsageRow = ({
   isUnlimited,
   suffix,
   tooltip,
-}: UsageRowProps) => {
-  const hasMax = !isNil(max);
+  progressBar = false,
+}: UsageRowProps & { progressBar?: boolean }) => {
+  const hasMax = !isNil(max) && max > 0;
+  const percentage = hasMax ? Math.min(100, ((value ?? 0) / max!) * 100) : 0;
 
   return (
-    <div className="flex items-center justify-between gap-2 w-full text-xs">
-      <div className="flex items-center gap-2">
-        <span className="text-muted-foreground">•</span>
-        <span className="truncate font-medium">{name}</span>
-        {tooltip && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Info className="size-3.5 text-muted-foreground cursor-help" />
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-[220px]">
-              <p className="text-sm">{tooltip}</p>
-            </TooltipContent>
-          </Tooltip>
-        )}
+    <div className="flex flex-col gap-1.5 w-full">
+      <div className="flex items-center justify-between gap-2 w-full text-[11px]">
+        <div className="flex items-center gap-1.5">
+          <span className="truncate font-medium text-muted-foreground">{name}</span>
+          {tooltip && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info className="size-3 text-muted-foreground cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-[220px]">
+                <p className="text-xs">{tooltip}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+        <div className="flex items-center gap-1 font-semibold dark:text-gray-300">
+          {isUnlimited ? (
+            <span className="text-muted-foreground opacity-70">{t('Unlimited')}</span>
+          ) : suffix ? (
+            <span>
+              {formatUtils.formatNumber(value ?? 0)} {suffix}
+            </span>
+          ) : (
+            <span>
+              {formatUtils.formatNumber(value ?? 0)} /{' '}
+              {hasMax ? formatUtils.formatNumber(max) : '∞'}
+            </span>
+          )}
+        </div>
       </div>
-      <div className="flex items-center gap-2 text-foreground">
-        {isUnlimited ? (
-          <span className="text-muted-foreground">{t('Unlimited')}</span>
-        ) : suffix ? (
-          <span>
-            {formatUtils.formatNumber(value ?? 0)} {suffix}
-          </span>
-        ) : (
-          <span>
-            {formatUtils.formatNumber(value ?? 0)} /{' '}
-            {hasMax ? formatUtils.formatNumber(max) : t('Unlimited')}
-          </span>
-        )}
-      </div>
+      {progressBar && hasMax && (
+        <div className="h-1.5 w-full bg-black/20 dark:bg-white/5 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)] transition-all duration-1000" 
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+      )}
     </div>
   );
 };

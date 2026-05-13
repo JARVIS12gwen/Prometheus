@@ -257,16 +257,20 @@ export function ProjectDashboardSidebar({
       <Sidebar
         collapsible="icon"
         id={SIDEBAR_ID}
-        className={cn('max-h-[100vh]', className)}
+        className={cn(
+          'max-h-[100vh] border-r transition-all duration-500',
+          'dark:bg-[#0a0a0c] dark:border-white/5 dark:backdrop-blur-xl',
+          className
+        )}
       >
         <AppSidebarHeader />
 
-        <SidebarContent className="overflow-x-hidden">
-          <SidebarGroup>
-            <div className="mb-1 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
+        <SidebarContent className="overflow-x-hidden px-2 py-2 space-y-4">
+          <SidebarGroup className="p-0">
+            <div className="mb-2 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
               <GlobalSearchCommand />
             </div>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1">
               {items.map((item) => (
                 <ApSidebarItem key={item.label} {...item} />
               ))}
@@ -275,9 +279,11 @@ export function ProjectDashboardSidebar({
 
           <SidebarSeparator />
 
-          <SidebarGroup className="flex-1 overflow-hidden">
-            <div className="flex items-center justify-between group-data-[collapsible=icon]:hidden">
-              <SidebarGroupLabel>{t('Projects')}</SidebarGroupLabel>
+          <SidebarGroup className="flex-1 overflow-hidden px-0">
+            <div className="flex items-center justify-between px-3 mb-2 group-data-[collapsible=icon]:hidden">
+              <SidebarGroupLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                {t('Projects')}
+              </SidebarGroupLabel>
               <div className="flex items-center justify-center gap-2">
                 {shouldShowNewProjectButton && (
                   <CreateProjectButton
@@ -373,7 +379,7 @@ export function ProjectDashboardSidebar({
             </div>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
+        <SidebarFooter className="p-4 gap-4">
           {state === 'expanded' && <DelayedSidebarUsageLimits />}
           <SidebarPremiumLinks />
           <SidebarPlatformAdminLink />
