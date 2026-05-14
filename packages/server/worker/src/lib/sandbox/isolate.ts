@@ -71,8 +71,8 @@ export function isolateProcess(log: SandboxLogger, enginePath: string, _codeDire
             }
             assertSandboxEnv(sandboxEnv)
 
-            await execPromise(`${isolateBinaryPath} --box-id=${boxId} --cleanup`)
-            await execPromise(`${isolateBinaryPath} --box-id=${boxId} --init`)
+            await execPromise(`${isolateBinaryPath} --box-id=${boxId} --cleanup`).catch((e) => log.error({ e }, 'Isolate cleanup failed'))
+            await execPromise(`${isolateBinaryPath} --box-id=${boxId} --init`).catch((e) => log.error({ e }, 'Isolate init failed'))
 
             const sandboxRootfs = `/var/local/lib/isolate/${boxId}/root`
             for (const mount of mounts) {
@@ -104,7 +104,7 @@ export function isolateProcess(log: SandboxLogger, enginePath: string, _codeDire
                 engineSandboxPath,
             ]
 
-            log.debug({ sandboxId, command: `${isolateBinaryPath} ${args.join(' ')}` }, 'Spawning isolate process')
+            log.info({ sandboxId, command: `${isolateBinaryPath} ${args.join(' ')}` }, 'Spawning isolate process')
 
             const child = spawn(isolateBinaryPath, args, {
                 shell: false,

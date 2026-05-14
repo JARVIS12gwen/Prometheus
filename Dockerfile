@@ -107,7 +107,9 @@ COPY docker-entrypoint.sh .
 
 # Create all necessary directories in one layer
 RUN mkdir -p \
-    /usr/src/app/dist/packages/engine && \
+    /usr/src/app/dist/packages/engine \
+    /var/local/lib/isolate && \
+    chmod 777 /var/local/lib/isolate && \
     chmod +x docker-entrypoint.sh
 
 # Copy root config files needed for dependency resolution
@@ -123,8 +125,9 @@ COPY --from=build /usr/src/app/packages ./packages
 # Copy built engine
 COPY --from=build /usr/src/app/dist/packages/engine/ ./dist/packages/engine/
 
-# FIX: Explicitly chmod the sandbox binary to fix Permission Denied (Error 126)
-RUN chmod +x /usr/src/app/packages/server/api/src/assets/isolate
+# FIX: Explicitly chmod the sandbox binaries to fix Permission Denied (Error 126)
+RUN chmod +x /usr/src/app/packages/server/api/src/assets/isolate \
+             /usr/src/app/packages/server/api/src/assets/isolate-arm
 
 # FIX: Remove the lockfile before production install to bypass "frozen lockfile" error
 RUN --mount=type=cache,target=/root/.bun/install/cache \
