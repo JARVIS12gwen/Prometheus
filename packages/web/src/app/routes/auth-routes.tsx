@@ -6,6 +6,7 @@ import { ChangePasswordPage } from './change-password';
 import { CreatePlatformPage } from './create-platform';
 import { ResetPasswordPage } from './forget-password';
 import { SignInPage } from './sign-in';
+import { OnboardingPage } from './onboarding';
 import { SignUpPage } from './sign-up';
 
 export const authRoutes = [
@@ -54,6 +55,14 @@ export const authRoutes = [
     element: (
       <PageTitle title="Create Platform">
         <CreatePlatformPage />
+      </PageTitle>
+    ),
+  },
+  {
+    path: '/onboarding',
+    element: (
+      <PageTitle title="Onboarding">
+        <OnboardingPage />
       </PageTitle>
     ),
   },

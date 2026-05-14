@@ -8,7 +8,7 @@ import {
   TemplateTelemetryEventType,
 } from '@activepieces/shared';
 import { t } from 'i18next';
-import { Search, CreditCard, Scale, Info, Moon, Sun } from 'lucide-react';
+import { Search, CreditCard, Scale, Info, Moon, Sun, Bell } from 'lucide-react';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '@/components/providers/theme-provider';
@@ -241,12 +241,28 @@ export function ProjectDashboardSidebar({
     isSubItem: false,
   };
 
+  const notificationsLink: SidebarItemType = {
+    type: 'link',
+    to: '#', // We will use a drawer later
+    label: t('Notifications'),
+    icon: Bell,
+    show: true,
+    hasPermission: true,
+    isSubItem: false,
+    notification: true, // This triggers the pulsing red dot
+    onClick: () => {
+      // Logic for notifications drawer
+      alert(t('Prometheus News: No new updates at this time. Stay tuned!'));
+    }
+  };
+
   const items = [
     chatLink,
     exploreLink,
     impactLink,
     leaderboardLink,
     pricingLink,
+    notificationsLink,
     legalLink,
   ]
     .filter((item) => item.show !== false)

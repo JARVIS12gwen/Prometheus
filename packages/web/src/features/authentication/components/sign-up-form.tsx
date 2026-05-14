@@ -96,10 +96,10 @@ const SignUpForm = ({
       if (data.verified) {
         authenticationSession.saveResponse(data, false);
         if (isNil(data.projectId)) {
-          navigate('/create-platform');
+          navigate('/onboarding');
           return;
         }
-        redirectAfterLogin();
+        navigate('/onboarding');
       } else {
         setShowCheckYourEmailNote(true);
       }
