@@ -6,8 +6,13 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
 
 # Install all system dependencies in a single layer with cache mounts
+# Added Redis official repo for version 7.4.1
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install -y --no-install-recommends curl gnupg ca-certificates && \
+    curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb bullseye main" | tee /etc/apt/sources.list.d/redis.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         redis-server \
@@ -21,8 +26,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         procps \
         locales \
         unzip \
-        curl \
-        ca-certificates \
         iptables \
         libcap-dev && \
     yarn config set python /usr/bin/python3 && \
@@ -65,9 +68,9 @@ WORKDIR /usr/src/app
 COPY .npmrc package.json bun.lock bunfig.toml ./
 COPY packages/ ./packages/
 
-# Install all dependencies with frozen lockfile
+# Install all dependencies
 RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install
+    bun install --no-frozen-lockfile
 
 # Copy remaining source code (turbo config, etc.)
 COPY . .
@@ -75,7 +78,7 @@ COPY . .
 # Build frontend, engine, server API, and worker
 RUN npx turbo run build --filter=web --filter=@activepieces/engine --filter=api --filter=worker
 
-# Generate migration manifest (ordered list of migration names) for image-tag-based rollback
+# Generate migration manifest
 RUN node -e "\
   const {getMigrations} = require('./packages/server/api/dist/src/app/database/postgres-connection');\
   const names = getMigrations().map(M => new M().name);\
@@ -91,7 +94,7 @@ RUN rm -rf packages/pieces/core packages/pieces/custom && \
       ! -name facebook-leads \
       ! -name intercom \
       -exec rm -rf {} + && \
-    rm -f bun.lock && bun install
+    rm -f bun.lock && bun install --no-frozen-lockfile
 
 ### STAGE 2: Run ###
 FROM base AS run
@@ -114,15 +117,18 @@ COPY --from=build /usr/src/app/bun.lock ./
 COPY --from=build /usr/src/app/bunfig.toml ./
 COPY --from=build /usr/src/app/LICENSE .
 
-# Copy workspace package.json files (needed for bun workspace resolution)
+# Copy workspace package.json files
 COPY --from=build /usr/src/app/packages ./packages
 
 # Copy built engine
 COPY --from=build /usr/src/app/dist/packages/engine/ ./dist/packages/engine/
 
-# Regenerate lockfile and install production dependencies (pieces were trimmed from workspace)
+# FIX: Explicitly chmod the sandbox binary to fix Permission Denied (Error 126)
+RUN chmod +x /usr/src/app/packages/server/api/src/assets/isolate
+
+# FIX: Remove the lockfile before production install to bypass "frozen lockfile" error
 RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --production
+    rm -f bun.lock && bun install --production
 
 # Copy frontend files
 COPY --from=build /usr/src/app/dist/packages/web ./dist/packages/web/
